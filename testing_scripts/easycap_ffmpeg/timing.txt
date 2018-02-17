@@ -1,0 +1,11 @@
+empty capture
+100 = 4 seconds
+300 = 10 seconds
+1000 = 35 seconds
+
+static capture
+1000 = 1 minute 1 second
+
+approximately 16 fps
+
+assume 10 or 5 fps, giving 0.1 or 0.2 seconds per frame of processing time available.

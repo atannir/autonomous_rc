@@ -1,0 +1,210 @@
+https://www.raspberrypi.org/forums/viewtopic.php?t=155882
+https://raspberrypi.stackexchange.com/questions/15693/record-audio-in-python-when-button-pressed
+https://stackoverflow.com/questions/46106989/how-to-record-button-presses-in-python-to-open-combination-lock
+
+#!/usr/bin/python
+#record video software
+#date:03 august 2016
+#Ferdinand
+
+import time
+import datetime
+import RPi.GPIO as GPIO
+
+#GPIO25 header pin 22
+#pushbutton between pin 6 and pin 22
+#Important
+#A pull-up resistor is missing so we use the pull-up circuitry inside the RPi
+#pull_up_down = GPIO.PUD_UP
+#otherwise the software does not work properly
+Button_input = 25
+
+#GPIO24 led pin 18
+Led_output = 24
+
+max_spikes_detected = 50
+max_no_spikes = 10
+debounce_sleep_time = 0.01
+
+#button polarity is 0 for low active signal and 1 high active signals
+button_polarity = 0
+
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BCM)     # set up BCM GPIO numbering
+GPIO.setup(Button_input, GPIO.IN, pull_up_down = GPIO.PUD_UP)    # set GPIO25 a$
+
+#Functions
+#
+def read_gpio_25():
+   global button_pressed
+   button_pressed = 0
+   spikes_detected = 1
+   if (GPIO.input(Button_input) == button_polarity) : # switch has been pressed$
+      button_pressed = 1
+   loop = True
+   no_spikes = 0
+   if button_pressed == 1:
+      while loop == True:
+         if (GPIO.input(Button_input) !=  (button_polarity)) :
+            #spike detected
+            spikes_detected = spikes_detected + 1
+            if spikes_detected > max_spikes_detected :
+               #timeout
+               loop = False
+            no_spikes = 0
+            button_pressed = 0
+         if (GPIO.input(Button_input) == button_polarity) :
+            #no spikes detected
+            no_spikes = no_spikes + 1
+            if no_spikes > max_no_spikes :
+               button_pressed = 1
+               loop = False
+         time.sleep(debounce_sleep_time)
+   else:
+      pass
+      #print "No Button Pressed"
+   while (GPIO.input(Button_input) ==  (button_polarity)) :
+      pass
+
+
+#Main Program
+#
+try:
+   print("Vlogging - press pushbutton to start recording")
+   print("           press pushbutton again to stop recording\n")
+   recorder_start = False
+   #recorder_stop  = False
+
+   while True :
+      read_gpio_25()
+      if button_pressed == 1:
+         recorder_start = not recorder_start
+         print "Button pressed"
+
+         if recorder_start == True:
+            print "Start recording a video"
+            print "LED ON"
+         if recorder_start == False:
+            print "Stop recording a video"
+            print "LED OFF"
+
+except KeyboardInterrupt:
+      GPIO.cleanup()
+finally:
+      GPIO.cleanup()
+
+--------
+
+A coworker helped me figure it out, you need to setup the recorder just before listening, and then make the recfile variable a global:
+
+import RPi.GPIO as gpio
+from recorder import Recorder
+gpio.setmode(gpio.BCM)
+
+gpio.setup(23, gpio.IN, pull_up_down=gpio.PUD_UP)
+
+
+
+def rising(channel):
+    global recfile
+    gpio.remove_event_detect(23)
+    print 'Button up'
+    gpio.add_event_detect(23, gpio.FALLING, callback=falling, bouncetime=10)
+    recfile.stop_recording()
+    recfile.close()
+
+
+def falling(channel):
+    global recfile
+    gpio.remove_event_detect(23)
+    print 'Button down'
+    gpio.add_event_detect(23, gpio.RISING, callback=rising, bouncetime=10)
+    rec = Recorder(channels=2)
+    recfile = rec.open('nonblocking.wav', 'wb') 
+    recfile.start_recording()
+
+gpio.add_event_detect(23, gpio.FALLING, callback=falling, bouncetime=10)
+
+try:
+    raw_input()
+
+except KeyboardInterrupt:
+    gpio.cleanup()
+gpio.cleanup()
+Of course, there's a better way than using globals and that'd be creating a class:
+
+import RPi.GPIO as gpio 
+from recorder import Recorder 
+gpio.setmode(gpio.BCM)  
+
+class ButtonRecorder(object): 
+    def __init__(self, filename): 
+        self.filename = filename 
+        gpio.setup(23, gpio.IN, pull_up_down=gpio.PUD_UP) 
+        self.rec = Recorder(channels=2) 
+
+    def start(self): 
+        gpio.add_event_detect(23, gpio.FALLING, callback=self.falling, bouncetime=10) 
+
+    def rising(self, channel): 
+        gpio.remove_event_detect(23) 
+        print 'Button up' 
+        gpio.add_event_detect(23, gpio.FALLING, callback=self.falling, bouncetime=10) 
+        self.recfile.stop_recording() 
+        self.recfile.close() 
+
+    def falling(self, channel): 
+        gpio.remove_event_detect(23) 
+        print 'Button down' 
+        gpio.add_event_detect(23, gpio.RISING, callback=self.rising, bouncetime=10) 
+        self.recfile = self.rec.open(self.filename, 'wb')    
+        self.recfile.start_recording() 
+
+rec = ButtonRecorder('nonblocking.wav')
+rec.start() 
+
+try: 
+    raw_input() 
+
+except KeyboardInterrupt: 
+    pass 
+
+gpio.cleanup()
+
+--------
+
+import os
+from time import sleep
+
+import RPi.GPIO as GPIO
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(17, GPIO.IN)
+GPIO.setup(27, GPIO.IN)
+GPIO.setup(22, GPIO.IN)
+GPIO.setup(10, GPIO.IN)
+
+while True:
+    if (GPIO.input(17) == False):
+        os.system('mpg123 /home/pi/frogjars/frog1.mp3 &')
+        print("Button 1 Pressed")
+        sleep(3)
+    if (GPIO.input(27) == False):
+        os.system('mpg123 /home/pi/frogjars/frog2.mp3 &')
+        print("Button 2 Pressed")
+        sleep(3)
+    if (GPIO.input(22) == False):
+        os.system('mpg123 /home/pi/frogjars/frog3.mp3 &')
+        print("Button  3 Pressed")
+        sleep(3)
+    if (GPIO.input(10) == False):
+        os.system('mpg123 /home/pi/frogjars/frog4.mp3 &')
+        print("Button  4 Pressed")
+        sleep(3)
+
+    sleep(0.1);
+
+--------
+
+
+

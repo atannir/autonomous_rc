@@ -1,0 +1,1 @@
+ffmpeg -f v4l2 -i /dev/video0 -frames 3 out%03d.jpg

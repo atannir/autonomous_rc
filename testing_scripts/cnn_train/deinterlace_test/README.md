@@ -1,0 +1,1 @@
+Since the image from the camera is an interlaced NTSC signal, we sometimes get frames that have old data. This script showed that keeping the even fields led to better image quality. Python's slice notation made it easy and fast to shrink the image to maintain aspect ratio.
