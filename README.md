@@ -19,4 +19,9 @@ Create car object to facilitate and isolate functions that should be agnostic to
 
 Docker for getting up and running on a new installation.
 
+Determine timings for constant speeds, acceleration, and turning radius.
+
+Perform timed continuous captures of video stream for additional training (and to test throughput).
+
+
 
