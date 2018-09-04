@@ -17,7 +17,7 @@ TODO:
 
 Create car object to facilitate and isolate functions that should be agnostic to the functioning of our input and neural network. This will also help with configuration between cars.
 
-Docker for getting up and running on a new installation.
+Docker for getting up and running on a new installation. (Add TensorFlow, Keras, OpenCV, etc.)
 
 Determine timings for constant speeds, acceleration, and turning radius.
 
