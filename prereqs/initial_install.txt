@@ -1,4 +1,4 @@
-sudo apt-get purge wolfram-engine
+sudo apt-get purge wolfram-engine wolframscript
 sudo apt-get clean
 sudo apt-get autoremove
 sudo apt-get remove --purge libreoffice*

@@ -1,0 +1,6 @@
+Create car object
+Keep track of if we are presumed stopped or in motion
+Allow control of hardware from the object using GPIO
+Controls and timing for constant speed
+Calculate turning radius and timing for angle of turns
+More will come to mind after I commit and push
