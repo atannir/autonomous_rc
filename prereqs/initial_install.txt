@@ -1,0 +1,13 @@
+sudo apt-get purge wolfram-engine
+sudo apt-get clean
+sudo apt-get autoremove
+sudo apt-get remove --purge libreoffice*
+sudo apt-get clean
+sudo apt-get autoremove
+# other candidates: scratch minecraft-pi assorted java packages
+# @raspberrypi:~/Desktop $ dpkg-query -Wf '${Installed-Size}\t${Package}\t${Priority}\n' | egrep '\s(optional|extra)' | cut -f 1,2 | sort -nr | less
+# will display size usage by package and sort with highest at top
+
+apt-get update
+
+apt-get install vim curl wget uptimed downtimed git docker lightdm
