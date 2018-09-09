@@ -8,8 +8,12 @@ sudo apt-get autoremove
 # @raspberrypi:~/Desktop $ dpkg-query -Wf '${Installed-Size}\t${Package}\t${Priority}\n' | egrep '\s(optional|extra)' | cut -f 1,2 | sort -nr | less
 # will display size usage by package and sort with highest at top
 
-apt-get update
+sudo apt-get update
 
-apt-get install vim curl wget uptimed downtimed git docker.io docker-compose docker-registry docker-swarm lightdm locate
+# wherein we learn that docker is not docker.io
+sudo apt-get install vim curl wget uptimed downtimed git docker.io docker-compose docker-registry docker-swarm lightdm locate
 sudo systemctl enable docker
 sudo systemctl start docker
+
+# add our user to the group so we can run as non-root
+sudo usermod -aG docker pi 
