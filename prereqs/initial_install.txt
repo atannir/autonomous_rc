@@ -8,10 +8,20 @@ sudo apt-get autoremove
 # @raspberrypi:~/Desktop $ dpkg-query -Wf '${Installed-Size}\t${Package}\t${Priority}\n' | egrep '\s(optional|extra)' | cut -f 1,2 | sort -nr | less
 # will display size usage by package and sort with highest at top
 
+curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+
+sudo apt-key fingerprint 0EBFCD88
+
+# from docs.docker.com/install/linux/docker-ce/debian/
+echo "deb [arch=armhf] https://download.docker.com/linux/debian \
+$(lsb_release -cs) stable" | \
+sudo tee /etc/apt/sources.list.d/docker.list
+
+
 sudo apt-get update
 
-# wherein we learn that docker is not docker.io
-sudo apt-get install vim curl wget uptimed downtimed git docker.io docker-compose docker-registry docker-swarm lightdm locate
+# wherein we learn that docker is not docker.io and it has been replaced with docker-ce anyway
+sudo apt-get install vim curl wget uptimed downtimed git docker-ce lightdm locate
 sudo systemctl enable docker
 sudo systemctl start docker
 
