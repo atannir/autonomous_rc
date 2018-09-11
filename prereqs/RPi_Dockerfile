@@ -11,7 +11,8 @@ ENTRYPOINT []
 
 # remove old Python versions and any other cruft we don't need
 
-RUN apt-get update && apt-get -qy install curl wget ca-certificates \
+RUN apt-get update && apt-get -qy --no-install-recommends install curl \
+wget ca-certificates \
 python3-pip python-opencv python-numpy
 
 # clear space by clearing cache, recommended by fromlatest.io linter
