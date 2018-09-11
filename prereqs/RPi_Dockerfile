@@ -1,0 +1,20 @@
+FROM resin/raspberrypi3-debian:latest
+# Dockerfile for the Raspberry Pi that will drive the RC car
+
+# Assembled from official documentation and Ales Ellis' blog post "Getting Started with Docker on Raspberry Pi
+# Switched from the resin/raspberrypi3-python to resin/raspberrypi3-debian
+# Build with: docker build  -f RPi_Dockerfile -t atannir/auto_rc .
+# Add a version tag if you like and push it to the repo
+
+ENTRYPOINT []
+# reject pre-defined startup and replace it with our own
+
+# remove old Python versions and any other cruft we don't need
+
+RUN apt-get update && apt-get -qy install curl wget ca-certificates \
+python3-pip python-opencv python-numpy
+
+# clear space by clearing cache, recommended by fromlatest.io linter
+RUN rm -rf /var/lib/apt/lists/*
+
+
