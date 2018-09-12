@@ -20,6 +20,5 @@ python3-pip python3-numpy python3-pandas python3-h5py python3-flask qv4l2
 RUN rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install --upgrade pip
-RUN pip3 install opencv-python
-RUN pip3 install opencv-contrib-python
-RUN pip3 install tensorflow
+RUN pip3 install opencv-python opencv-contrib-python
+RUN pip3 install tensorflow keras
