@@ -1,5 +1,6 @@
-FROM resin/raspberrypi3-debian:latest
+FROM resin/raspberrypi3-debian:stretch
 # Dockerfile for the Raspberry Pi that will drive the RC car
+# For some reason :latest is not :stretch but is still jessie
 
 # Assembled from official documentation and Ales Ellis' blog post "Getting Started with Docker on Raspberry Pi
 # Switched from the resin/raspberrypi3-python to resin/raspberrypi3-debian
@@ -12,10 +13,12 @@ ENTRYPOINT []
 # remove old Python versions and any other cruft we don't need
 
 RUN apt-get update && apt-get -qy --no-install-recommends install curl \
-wget ca-certificates \
-python3-pip python-opencv python-numpy
+wget ca-certificates apt-utils bzip2 raspi-gpio python3-pigpio \
+python3-pip python3-numpy python3-pandas python3-h5py python3-flask qv4l2
 
 # clear space by clearing cache, recommended by fromlatest.io linter
 RUN rm -rf /var/lib/apt/lists/*
 
-
+RUN pip3 install --upgrade pip
+RUN pip3 install opencv
+RUN pip3 install tensorflow
