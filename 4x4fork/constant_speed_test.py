@@ -1,9 +1,18 @@
 import RPi.GPIO as GPIO
 from time import sleep
 
+# Red and Brown are ground on remote (GND and GROUND)
+# Black right blue left
+# Purple forward, gray back
+# 
+# Connect lead cables to 5, 7, 9 (GND)
+# Connect lead cables to 6 (GND), 8, 10
+
+
+
 # "Constants"
-IO_RIGHT = 3
-IO_LEFT = 5
+IO_RIGHT = 5
+IO_LEFT = 7
 IO_FORWARD = 8
 IO_BACK = 10
 
@@ -11,7 +20,7 @@ buttons = [IO_RIGHT, IO_LEFT, IO_FORWARD, IO_BACK]
 
 duration = 0.15
 
-loops = 20
+loops = 10
 
 GPIO.setmode(GPIO.BOARD) # pin 1 top left of header
 
@@ -46,32 +55,40 @@ def dirWithDur(direction = 0, duration = 0.0):
         sleep(duration)
         return
     if "S" in direction: # straight, no turning
-        GPIO.output(IO_FORWARD, GPIO.HIGH)
-        GPIO.output(IO_BACK, GPIO.HIGH)
-    if "N" in direction: # neutral motion
         GPIO.output(IO_LEFT, GPIO.HIGH)
         GPIO.output(IO_RIGHT, GPIO.HIGH)
+        print("Straight")
+    if "N" in direction: # neutral motion
+        GPIO.output(IO_FORWARD, GPIO.HIGH)
+        GPIO.output(IO_BACK, GPIO.HIGH)
+        print("Neutral")
     if "F" in direction: # and "B" not in direction:
         GPIO.output(IO_FORWARD, GPIO.LOW)
         GPIO.output(IO_BACK, GPIO.HIGH)
+        print("Going F")
     if "B" in direction: # and "F" not in direction:
         GPIO.output(IO_BACK, GPIO.LOW)
         GPIO.output(IO_FORWARD, GPIO.HIGH)
+        print("Going B")
     if "R" in direction: # and "L" not in direction:
         GPIO.output(IO_RIGHT, GPIO.LOW)
         GPIO.output(IO_LEFT, GPIO.HIGH)
+        print("Turning R")
     if "L" in direction: # and "R" not in direction:
         GPIO.output(IO_LEFT, GPIO.LOW)
         GPIO.output(IO_RIGHT, GPIO.HIGH)
+        print("Turning L")
     sleep(duration)
 
 try:
 #    for (d, dur) in pattern:
 #        dirWithDur(d, dur)
+    dirWithDur("F", 0.20) # to go from stopped
     for x in range(loops):
-        dirWithDur("F", 0.05)
-    for x in range(loops):
-        dirWithDur("B", 0.05)
+        dirWithDur("F", 0.20)
+        dirWithDur("N", 0.30)
+#    for x in range(loops):
+#        dirWithDur("B", 0.05)
 #    dirWithDur("B", 0.15)
 #    dirWithDur()
 
