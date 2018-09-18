@@ -1,3 +1,6 @@
-FROM nvidia/cuda:9.2-cudnn7-runtime-ubuntu18.04
+FROM nvidia/cuda:9.0-cudnn7-runtime-ubuntu16.04
 # Dockerfile that will be used to train network on CUDA hardware
+
+# Need to install python3, pip3, tensorflow or tensorflow-gpu,
+# keras, opencv, vim, numpy, scipy, pandas, 
 
