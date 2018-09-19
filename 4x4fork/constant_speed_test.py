@@ -20,7 +20,7 @@ buttons = [IO_RIGHT, IO_LEFT, IO_FORWARD, IO_BACK]
 
 duration = 0.15
 
-loops = 10
+loops = 5
 
 GPIO.setmode(GPIO.BOARD) # pin 1 top left of header
 
@@ -83,10 +83,10 @@ def dirWithDur(direction = 0, duration = 0.0):
 try:
 #    for (d, dur) in pattern:
 #        dirWithDur(d, dur)
-    dirWithDur("F", 0.20) # to go from stopped
+    dirWithDur("F", 0.30) # to go from stopped
     for x in range(loops):
-        dirWithDur("F", 0.20)
-        dirWithDur("N", 0.30)
+        dirWithDur("N", 0.30) # 0.20 to 0.35 depending on car battery level
+        dirWithDur("F", 0.35)
 #    for x in range(loops):
 #        dirWithDur("B", 0.05)
 #    dirWithDur("B", 0.15)
