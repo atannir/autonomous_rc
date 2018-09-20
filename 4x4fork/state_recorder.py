@@ -18,11 +18,14 @@ saved_frames = 0
 frame_delay = 0.05
 max_frames = 100
 start_time = time()
+end_time = None
 cap = None # to be assigned later, cv2.VideoCapture(0)
+filename_base = "capture_" + str(time) + "_out"
+
+last_frame = None
 
 
-
-def init(output_folder = ""):
+def init(output_folder = None):
     # Initialize hardware
     GPIO.setmode(GPIO.BOARD) # pin 1 at top left of header when USB at bottom
 
@@ -31,12 +34,23 @@ def init(output_folder = ""):
     GPIO.setup(IO_FORWARD, GPIO.IN) # forward
     GPIO.setup(IO_BACK, GPIO.IN) # back
     # add entries for buttons and LEDs later
-    sleep(init_delay)
+    if output_folder is not None:
+        filename_base = output_folder # TODO: regex filter / replace for safety
+    if not (os.path.exists('./' + filename_base)): # create in any case
+        os.mkdir('./' + filename_base) # will throw OSError is existing dir
+
+    cap = cv2.VideoCapture(0)
+    # TODO: detect static (no signal) or black (receiver out)
+    
+    # sleep(init_delay)
+
 
 def finish():
     GPIO.cleanup() # reset all IO states
-    cap.release() # assuming it was set
+    if cap is not None:
+        cap.release() # assuming it was set
     #cv2.destroyAllWindows() # no video output here
+
 
 def getPinState():
     # forward, neutral, back
@@ -57,6 +71,28 @@ def getPinState():
         outstr += "S"
     return outstr
                               
+def getOutFile():
+    # Keeping order, will still sort properly
+    return './' + filename_base + '/' + str(time()) + "-" + filename_base  + "-" + getPinState()  + ".png"
 
-    
+def saveFrame():
+    # removed frame counter check
+    ret, frame = cap.read()
+    # removed display logic here cv2.imshow('frame', frame)
+    # removed if cv2.waitKey(1) & 0xFF == ord('q') / break (in try)
+    last_frame = frame
+    outfile = getOutFile()
+    cv2.imwrite(outfile, frame)
+    saved_frames += 1
+
+def getLastFrame():
+    return last_frame
+
+if __name__ == '__main__':
+    init("maintest")
+    print(getPinState())
+    saveFrame()
+
+
+
 atexit.register(finish)

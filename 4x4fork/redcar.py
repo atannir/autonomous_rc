@@ -26,6 +26,8 @@ last_cmd = ""
 current_cmd = ""
 next_cmd = ""
 
+debug = True
+debug = False
 
 
 def init():
@@ -49,11 +51,15 @@ def testAllOutputs():
     left()
     right()
     stop(0.5)
+
+def dprint(s):
+    if debug:
+        print(s)
     
 def dirWithDur(direction = 0, duration = 0.0):
     # pass in 0 to 2 in alphabet of (FNB)(RSL)
     # if called with no args, unpress all buttons
-    print(str(direction) + " " + str(duration))
+    dprint(str(direction) + " " + str(duration))
     if (direction == 0):
         for b in buttons:
             GPIO.output(b, GPIO.HIGH) # button off
@@ -63,27 +69,27 @@ def dirWithDur(direction = 0, duration = 0.0):
     if "S" in direction: # straight, no turning
         GPIO.output(IO_LEFT, GPIO.HIGH)
         GPIO.output(IO_RIGHT, GPIO.HIGH)
-        print("Straight")
+        dprint("Straight")
     if "N" in direction: # neutral motion
         GPIO.output(IO_FORWARD, GPIO.HIGH)
         GPIO.output(IO_BACK, GPIO.HIGH)
-        print("Neutral")
+        dprint("Neutral")
     if "F" in direction: # and "B" not in direction:
         GPIO.output(IO_FORWARD, GPIO.LOW)
         GPIO.output(IO_BACK, GPIO.HIGH)
-        print("Going F")
+        dprint("Going F")
     if "B" in direction: # and "F" not in direction:
         GPIO.output(IO_BACK, GPIO.LOW)
         GPIO.output(IO_FORWARD, GPIO.HIGH)
-        print("Going B")
+        dprint("Going B")
     if "R" in direction: # and "L" not in direction:
         GPIO.output(IO_RIGHT, GPIO.LOW)
         GPIO.output(IO_LEFT, GPIO.HIGH)
-        print("Turning R")
+        dprint("Turning R")
     if "L" in direction: # and "R" not in direction:
         GPIO.output(IO_LEFT, GPIO.LOW)
         GPIO.output(IO_RIGHT, GPIO.HIGH)
-        print("Turning L")
+        dprint("Turning L")
     sleep(duration)
 
 def stop(duration = 0):
@@ -102,6 +108,7 @@ def backward(duration = default_duration):
     dirWithDur("B", duration)
 
 if __name__ == "__main__":
+    print("Debug: " + str(debug))
     print("Testing module for red RC car.")
     init()
     testAllOutputs()
