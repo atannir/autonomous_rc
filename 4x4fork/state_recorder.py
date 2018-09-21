@@ -20,7 +20,7 @@ max_frames = 100
 start_time = time()
 end_time = None
 cap = None # to be assigned later, cv2.VideoCapture(0)
-filename_base = "capture_" + str(time) + "_out"
+filename_base = "capture_" + str(time()) + "_out"
 
 last_frame = None
 
