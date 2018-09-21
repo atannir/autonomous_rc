@@ -1,18 +1,10 @@
-#import RPi.GPIO as GPIO
 from time import sleep, time
-#import numpy as np
 import cv2
 import os
 import atexit
 
 import image_capture as img
 import controller_capture as ctl
-
-# "Constants"
-#IO_RIGHT = 5
-#IO_LEFT = 7
-#IO_FORWARD = 8
-#IO_BACK = 10
 
 # Defaults
 
@@ -22,7 +14,7 @@ frame_delay = 0.05
 max_frames = 100
 start_time = time()
 end_time = None
-# cap = None # to be assigned later, cv2.VideoCapture(0)
+
 filename_base = "capture_" + str(time()) + "_out"
 
 last_frame = None
@@ -33,56 +25,18 @@ def init(output_folder = None):
     img.init()
     # Initialize hardware
     ctl.init()
-    #GPIO.setmode(GPIO.BOARD) # pin 1 at top left of header when USB at bottom
 
-    #GPIO.setup(IO_RIGHT, GPIO.IN) # right
-    #GPIO.setup(IO_LEFT, GPIO.IN) # left
-    #GPIO.setup(IO_FORWARD, GPIO.IN) # forward
-    #GPIO.setup(IO_BACK, GPIO.IN) # back
-    # add entries for buttons and LEDs later
     if output_folder is not None:
         filename_base = output_folder # TODO: regex filter / replace for safety
     if not (os.path.exists('./' + filename_base)): # create in any case
         os.mkdir('./' + filename_base) # will throw OSError is existing dir
 
-    #cap = cv2.VideoCapture(0)
-    #print(cap)
-    # TODO: detect static (no signal) or black (receiver out)
-    
-    # sleep(init_delay)
+    # init delay here
 
 
 def finish():
     pass
-    #global cap
-    #GPIO.cleanup() # reset all IO states
-    #if cap is not None:
-    #    cap.release() # assuming it was set
-    #cv2.destroyAllWindows() # no video output here
 
-#def getPinState():
-    # forward, neutral, back
-    # left, straight, right
-#    outstr = ""
-#    if((GPIO.input(IO_FORWARD) == False) and
-#       (GPIO.input(IO_BACK) == False) and
-#       (GPIO.input(IO_RIGHT) == False) and
-#       (GPIO.input(IO_LEFT) == False)):
-#        return "XY" # remote off
-#    if (GPIO.input(IO_FORWARD) == False):
-#        outstr += "F"
-#    elif (GPIO.input(IO_BACK) == False):
-#        outstr += "B"
-#    else:
-#        outstr += "N"
-        
-#    if (GPIO.input(IO_RIGHT) == False):
-#        outstr += "R"
-#    elif (GPIO.input(IO_LEFT) == False):
-#        outstr += "L"
-#    else:
-#        outstr += "S"
-#    return outstr
 
 def getOutFile():
     # Keeping order, will still sort properly
@@ -91,7 +45,6 @@ def getOutFile():
 def saveFrame():
     global saved_frames, last_frame    
     # removed frame counter check
-    #ret, frame = cap.read()
     # removed display logic here cv2.imshow('frame', frame)
     # removed if cv2.waitKey(1) & 0xFF == ord('q') / break (in try)
     frame = img.returnFrame()
@@ -107,8 +60,5 @@ if __name__ == '__main__':
     init("maintest")
     print(ctl.getPinState())
     saveFrame()
-    #print(last_frame)
-
-
 
 atexit.register(finish)
