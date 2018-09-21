@@ -7,7 +7,6 @@ import redcar as car
 #import state_recorder as ctl
 
 
-
 # drive car with keyboard
 
 car.init()
