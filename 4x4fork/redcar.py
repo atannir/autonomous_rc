@@ -22,9 +22,10 @@ default_duration = 0.2 # in seconds
 
 # State variables
 
-last_cmd = ""
+#last_cmd = ""
 current_cmd = ""
-next_cmd = ""
+current_dur = default_duration
+#next_cmd = ""
 
 debug = True
 debug = False
@@ -107,6 +108,14 @@ def forward(duration = default_duration):
 def backward(duration = default_duration):
     dirWithDur("B", duration)
 
+def setCmd(cmd, dur):
+    global current_cmd, current_duration
+    current_cmd = cmd
+    current_dur = dur
+    
+def go():
+    dirWithDur(current_cmd, current_dur)
+    
 if __name__ == "__main__":
     print("Debug: " + str(debug))
     print("Testing module for red RC car.")

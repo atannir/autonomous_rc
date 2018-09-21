@@ -26,6 +26,7 @@ last_frame = None
 
 
 def init(output_folder = None):
+    global filename_base, cap
     # Initialize hardware
     GPIO.setmode(GPIO.BOARD) # pin 1 at top left of header when USB at bottom
 
@@ -40,12 +41,14 @@ def init(output_folder = None):
         os.mkdir('./' + filename_base) # will throw OSError is existing dir
 
     cap = cv2.VideoCapture(0)
+    #print(cap)
     # TODO: detect static (no signal) or black (receiver out)
     
     # sleep(init_delay)
 
 
 def finish():
+    global cap
     GPIO.cleanup() # reset all IO states
     if cap is not None:
         cap.release() # assuming it was set
@@ -56,6 +59,11 @@ def getPinState():
     # forward, neutral, back
     # left, straight, right
     outstr = ""
+    if((GPIO.input(IO_FORWARD) == False) and
+       (GPIO.input(IO_BACK) == False) and
+       (GPIO.input(IO_RIGHT) == False) and
+       (GPIO.input(IO_LEFT) == False)):
+        return "XY" # remote off
     if (GPIO.input(IO_FORWARD) == False):
         outstr += "F"
     elif (GPIO.input(IO_BACK) == False):
@@ -70,12 +78,13 @@ def getPinState():
     else:
         outstr += "S"
     return outstr
-                              
+
 def getOutFile():
     # Keeping order, will still sort properly
     return './' + filename_base + '/' + str(time()) + "-" + filename_base  + "-" + getPinState()  + ".png"
 
 def saveFrame():
+    global saved_frames, last_frame    
     # removed frame counter check
     ret, frame = cap.read()
     # removed display logic here cv2.imshow('frame', frame)
@@ -83,7 +92,7 @@ def saveFrame():
     last_frame = frame
     outfile = getOutFile()
     cv2.imwrite(outfile, frame)
-    saved_frames += 1
+    saved_frames =+ 1
 
 def getLastFrame():
     return last_frame
@@ -92,6 +101,7 @@ if __name__ == '__main__':
     init("maintest")
     print(getPinState())
     saveFrame()
+    print(last_frame)
 
 
 
