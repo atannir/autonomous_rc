@@ -1,4 +1,5 @@
 *~
+capture_*_*/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

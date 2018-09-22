@@ -17,7 +17,7 @@ start_time = time()
 filename_base = "capture_" + str(time()) + "_out"
 
 last_frame = None
-last_frame_time = None
+last_frame_time = time() # Not ideal but will avoid type error with None
 end_time = None
 
 def init(output_folder = None):
@@ -43,7 +43,7 @@ def getOutFile():
     return './' + filename_base + '/' + str(time()) + "-" + filename_base  + "-" + ctl.getPinState()  + ".png"
 
 def saveFrame():
-    global saved_frames, last_frame, last_time
+    global saved_frames, last_frame, last_frame_time
     # removed frame counter check
     # removed display logic here cv2.imshow('frame', frame)
     # removed if cv2.waitKey(1) & 0xFF == ord('q') / break (in try)
@@ -61,10 +61,11 @@ if __name__ == '__main__':
     #init("maintest")
     init()
     #print(ctl.getPinState())
-    #saveFrame()
+    saveFrame() #make sure there is 1 frame changed and times are updated
     while ((saved_frames <= max_frames) and (cv2.waitKey(1) & 0xFF != ord('q') )):
         # will waitKey work if we don't have a display window?
         cv2.imshow('feed', img.returnFrame())
+        print( str(time()) + " " + str(last_frame_time) + " " + str(last_frame_time + frame_delay))
         if((last_frame_time + frame_delay) < time()):
             saveFrame()
         #pass
