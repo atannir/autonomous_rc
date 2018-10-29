@@ -11,7 +11,7 @@ import controller_capture as ctl
 init_delay = 5 # feels like a long time if you are waiting
 saved_frames = 0
 frame_delay = 0.1 # 20 fps 0.05, 10 fps = 0.1
-max_frames = 500
+max_frames = 9001
 start_time = time()
 
 filename_base = "capture_" + str(time()) + "_out"
@@ -32,10 +32,16 @@ def init(output_folder = None):
         os.mkdir('./' + filename_base) # will throw OSError is existing dir
 
     # init delay here
+    print("Sleeping for " + str(init_delay)  + " seconds.")
+    sleep(init_delay)
+    start_time = time()
 
 
 def finish():
-    pass
+    end_time = time()
+    print("Start: " + str(start_time) + " End: " + str(end_time))
+    print("Frames: " + str(saved_frames) + " Total time: " + str(end_time - start_time))
+    #pass
 
 
 def getOutFile():
@@ -52,7 +58,7 @@ def saveFrame():
     last_frame_time = time()
     outfile = getOutFile()
     cv2.imwrite(outfile, frame)
-    saved_frames =+ 1
+    saved_frames += 1
 
 def getLastFrame():
     return last_frame
@@ -62,7 +68,7 @@ if __name__ == '__main__':
     init()
     #print(ctl.getPinState())
     saveFrame() #make sure there is 1 frame changed and times are updated
-    while ((saved_frames <= max_frames) and (cv2.waitKey(1) & 0xFF != ord('q') )):
+    while ((saved_frames < max_frames) and (cv2.waitKey(1) & 0xFF != ord('q') )):
         # will waitKey work if we don't have a display window?
         cv2.imshow('feed', img.returnFrame())
         print( str(time()) + " " + str(last_frame_time) + " " + str(last_frame_time + frame_delay))
