@@ -13,7 +13,7 @@ Testing on the batteries showed the Pi and video reciever to remain powered for 
 
 One of the design goals was to modify the original RC car as little as possible.A small amount of moldable plastic was used to affix the drone camera to the top of the vehicle. The remote was taken apart and new connections were soldered to the PCB pads but it remains completely functional. An added benefit of the direct connection to the remote is that the Pi can change the mode of the GPIO pins to either control the car or record a human driver.
 
-TODO:
+#TODO:
 
 Create car object to facilitate and isolate functions that should be agnostic to the functioning of our input and neural network. This will also help with configuration between cars.
 
@@ -23,5 +23,11 @@ Determine timings for constant speeds, acceleration, and turning radius.
 
 Perform timed continuous captures of video stream for additional training (and to test throughput).
 
+#Helpful Commands:
 
+For enabling mouse-by-keyboard in X:
+
+setxkbmap -option keypad:pointerkeys
+
+Shift+NumLock to enable, 5 to click, / to select left click, * to select right click, + to right-click
 
