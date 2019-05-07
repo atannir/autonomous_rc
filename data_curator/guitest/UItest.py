@@ -2,7 +2,7 @@
 
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
-# Clean up once we know which parts we want
+from PyQt5.QtGui import *# Clean up once we know which parts we want
 
 import os
 
